@@ -154,16 +154,12 @@ class Unit:
     def is_bot(self):
         return self._bot
 
-
 class Tank(Unit):
     def __init__(self, canvas, row, col, bot=True):
         super().__init__(canvas,
-                         col*world.BLOCK_SIZE,
-                         row*world.BLOCK_SIZE,
-                         2,
-                         8,
-                         bot,
-                         'tank_up' )
+                     col*world.BLOCK_SIZE,
+                     row*world.BLOCK_SIZE,
+                     2, 8, bot, 'tunk_up')
         if bot:
             self._forward_image = 'tank_up'
             self._backward_image = 'tank_down'
@@ -175,29 +171,17 @@ class Tank(Unit):
             self._left_image = 'tank_left_player'
             self._right_image = 'tank_right_player'
 
-        # if bot:
-        #     self._left_image = 'tankT34_left'
-        #     self._right_image = 'tankT34_right'
-        #     self._forward_image = 'tankT34_forward'
-        #     self._backward_image = 'tankT34_backward'
-        # else:
-        #     self._left_image = 'tank_left_player'
-        #     self._right_image = 'tank_right_player'
-        #     self._forward_image = 'tank_forward_player'
-        #     self._backward_image = 'tank_backward_player'
-
-        self.forvard()
-        self._ammo = 80
-        self._usual_speed = self._speed
-        self._water_speed = self._speed//2
-        self._target = None
+        self.forward()
+        self.ammo = 80
+        self.usual_speed = self._speed
+        self.water_speed = self._speed//2
+        self.target = None
 
     def set_target(self, target):
         self._target = target
 
-
-    def _AI_goto_target(self):
-        if randint(1,2) == 1:
+    def AI_goto_target(self):
+        if randint(1, 2) == 1:
             if self._target.get_x() < self.get_x():
                 self.left()
             else:
@@ -209,15 +193,15 @@ class Tank(Unit):
                 self.backward()
 
     def _AI(self):
-        if randint(1,30) ==1:
-            if randint(1,10) < 9 and self._target is not None:
-                self._AI_goto_target()
+        if randint(1, 30) == 1:
+            if randint(1, 10) < 9 and self._target is not None:
+                self.AI_goto_target()
             else:
-                self._change_orientation()
+                self.change_orientation()
 
     def fire(self):
-        if self._ammo > 0:
-            self._ammo -= 1
+        if self.ammo > 0:
+            self.ammo -= 1
 
     def _take_ammo(self):
         self._ammo += 10
@@ -227,16 +211,16 @@ class Tank(Unit):
     def get_ammo(self):
         return self._ammo
 
+    def set_usual_speed(self):
+        self._speed = self.usual_speed
 
-    def _set_usual_speed(self):
-        self._speed = self._usual_speed
+    def set_water_speed(self):
+        self._speed = self.water_speed
 
-    def _set_water_speed(self):
-        self._speed = self._water_speed
 
     def _on_map_collision(self, details):
         if world.WATER in details and len(details) == 1:
-            self._set_water_speed()
+            self.set_water_speed()
         elif world.MISSLE in details:
             pos = details[world.MISSLE]
             if world.take(pos['row'], pos['col'])!= world.AIR:
@@ -245,21 +229,7 @@ class Tank(Unit):
             self._undo_move()
             if self._bot:
                 self._change_orientation()
+
     def _no_map_collision(self):
         self._set_usual_speed()
-
-    def _on_intersects(self, other_unit):
-        super()._on_intersects(other_unit)
-        if self._bot:
-            self._change_orientation()
-
-
-
-
-
-
-
-
-
-
 
