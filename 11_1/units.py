@@ -233,3 +233,7 @@ class Tank(Unit):
     def _no_map_collision(self):
         self._set_usual_speed()
 
+    def _on_intersects(self, other_unit):
+        super()._on_intersects(other_unit)
+        if self._bot:
+            self._change_orientation()
