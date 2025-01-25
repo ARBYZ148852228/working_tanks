@@ -95,6 +95,9 @@ class Hitbox:
             return False
         return True
 
+    def set_blacklist(self, blacklist):
+        self.__black_list = blacklist
+
 
     x = property(__get_x, __set_x)
     y = property(__get_y, __set_y)
