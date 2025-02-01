@@ -41,14 +41,14 @@ def key_press(event):
         player.left()
     elif event.keycode == KEY_D:
         player.right()
-    elif event.keycode == KEY_UP:
-        world.move_camera(0, -5)
-    elif event.keycode == KEY_DOWN:
-        world.move_camera(0, 5)
-    elif event.keycode == KEY_LEFT:
-        world.move_camera(-5, 0)
-    elif event.keycode == KEY_RIGHT:
-        world.move_camera(5, 0)
+    # elif event.keycode == KEY_UP:
+    #     world.move_camera(0, -5)
+    # elif event.keycode == KEY_DOWN:
+    #     world.move_camera(0, 5)
+    # elif event.keycode == KEY_LEFT:
+    #     world.move_camera(-5, 0)
+    # elif event.keycode == KEY_RIGHT:
+    #     world.move_camera(5, 0)
     elif event.keycode == 32:
         player.fire()
 

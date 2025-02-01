@@ -24,7 +24,7 @@ def _get_screen_text():
         return '☠ Game Over ☠'
     if len(_tanks) == 1:
         return 'You Win! 👏🤝'
-    return 'Left {} '.format(len(_tanks) - 1)
+    return f'Left {len(_tanks) - 1}\nAmmo: {get_player().ammo}'
 
 def update_screen_text():
     _canvas.itemconfig(id_screen_text, text=_get_screen_text())
