@@ -1,14 +1,14 @@
 from random import randint
-
+from missile_collection import check_missile_collision
 from units import Tank
 import world
-
+from tkinter import NW
 _tanks = []
 _canvas = None
-
+id_screen_text = 0
 
 def initialize(canv):
-    global _canvas
+    global _canvas, id_screen_text
     _canvas = canv
     # spawn(False)
     # for i in range(1):
@@ -16,15 +16,36 @@ def initialize(canv):
     player = spawn(False)
     enemy = spawn(True).set_target(player)
     spawn(True).set_target(player)
+    id_screen_text = _canvas.create_text(10, 10, text = _get_screen_text(), font = ('Impact', 20),
+                                         fill = 'white', anchor = NW)
+
+def _get_screen_text():
+    if get_player().is_destroyed():
+        return '☠ Game Over ☠'
+    if len(_tanks) == 1:
+        return 'You Win! 👏🤝'
+    return 'Left {} '.format(len(_tanks) - 1)
+
+def update_screen_text():
+    _canvas.itemconfig(id_screen_text, text=_get_screen_text())
 
 
 def get_player():
     return _tanks[0]
 
 def update():
-    for tank in _tanks:
-        tank.update()
-        check_collision(tank)
+    update_screen_text()
+    start = len(_tanks) - 1
+    for i in range(start, -1, -1):
+        if _tanks[i].is_destroyed() and i != 0:
+            del _tanks[i]
+        else:
+            _tanks[i].update()
+            check_collision(_tanks[i])
+            check_missile_collision(_tanks[i])
+
+
+
 
 def check_collision(tank):
     for other_tank in _tanks:

@@ -39,6 +39,12 @@ class Unit:
 
         self._create()
 
+    def damage(self, value):
+        self._hp -= value
+        if self._hp <= 0:
+            self.destroy()
+
+
     def is_destroyed(self):
         return self._destroyed
 
@@ -207,11 +213,49 @@ class Tank(Unit):
                 self.AI_goto_target()
             else:
                 self._change_orientation()
+        elif randint(1, 30) == 1:
+            self._AI_fire()
+        elif randint(1, 100) == 1:
+            self.fire()
+
 
     def fire(self):
         if self.ammo > 0:
             self.ammo -= 1
             missile_collection.fire(self)
+
+    def _AI_fire(self):
+        if self._target is None:
+            return
+        center_x = self.get_x() + self.get_size() // 2
+        center_y = self.get_y() + self.get_size() // 2
+
+        target_center_x = (self._target.get_x() + self._target.get_size() // 2)
+        target_center_y = (self._target.get_y() + self._target.get_size() // 2)
+
+        row = world.get_row(center_y)
+        col = world.get_col(center_x)
+
+        row_target = world.get_row(target_center_y)
+        col_target = world.get_col(target_center_x)
+
+        if row == row_target:
+            if col_target < col:
+                self.left()
+                self.fire()
+            else:
+                self.right()
+                self.fire()
+        if col == col_target:
+            if row_target < row:
+                self.forvard()
+                self.fire()
+            else:
+                self.backward()
+                self.fire()
+
+
+
 
     def _take_ammo(self):
         self.ammo += 10
@@ -281,6 +325,8 @@ class Missile(Unit):
             self.destroy()
         if world.CONCRETE in details:
             self.destroy()
+
+
 
 
 
