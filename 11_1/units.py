@@ -36,6 +36,7 @@ class Unit:
         self._right_image = default_image
         self._forward_image = default_image
         self._backward_image = default_image
+        self._destroyed_image = default_image
 
         self._create()
 
@@ -83,6 +84,10 @@ class Unit:
     def stop(self):
         self._vx = 0
         self._vy = 0
+
+    def destroyed(self):
+        self._canvas.itemconfig(self._id, image=skin.get(self._destroyed_image))
+
 
     def update(self):
         if self._bot:
@@ -185,6 +190,8 @@ class Tank(Unit):
             self._backward_image = 'tank_down_player'
             self._left_image = 'tank_left_player'
             self._right_image = 'tank_right_player'
+
+        self._destroyed_image = 'tank_destroy'
 
         self.forvard()
         self.ammo = 80
